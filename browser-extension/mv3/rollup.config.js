@@ -43,6 +43,10 @@ const processManifest = (content) => {
 
   if (isEmbeddedAppBuild) {
     delete manifestJson.action.default_popup;
+    manifestJson.content_security_policy.extension_pages = manifestJson.content_security_policy.extension_pages.replace(
+      "script-src 'self'",
+      "script-src 'self' 'wasm-unsafe-eval'"
+    );
   }
 
   if (!isProductionBuildMode) {

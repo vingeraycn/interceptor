@@ -28,7 +28,8 @@ const config = async ({ mode }) => {
               /\s*<!-- Global site tag \(gtag\.js\) - Google Analytics -->\s*<script async src="https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=G-7FZEBFLWK0"><\/script>\s*<script>[\s\S]*?<\/script>/,
               ""
             )
-            .replace(/\s*<script src="https:\/\/accounts\.google\.com\/gsi\/client" async><\/script>/, "");
+            .replace(/\s*<script src="https:\/\/accounts\.google\.com\/gsi\/client" async><\/script>/, "")
+            .replace(/\s*<script>[\s\S]*?<\/script>/g, "");
         },
       }
     : undefined;
