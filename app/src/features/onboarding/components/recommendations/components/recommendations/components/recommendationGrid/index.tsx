@@ -10,10 +10,12 @@ import { ImportRulesModal } from "features/rules/screens/rulesList/components/Ru
 import { CloudUploadOutlined } from "@ant-design/icons";
 import { SOURCE } from "modules/analytics/events/common/constants";
 import { trackUploadRulesButtonClicked } from "modules/analytics/events/features/rules";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 import "./index.scss";
 
 export const RecommendationGrid = () => {
   const user = useSelector(getUserAuthDetails);
+  const isLocalOnlyModeEnabled = isLocalOnlyMode();
   const [isImportRulesModalOpen, setIsImportRulesModalOpen] = useState(false);
   const toggleImportRulesModal = () => setIsImportRulesModalOpen(!isImportRulesModalOpen);
   return (
@@ -39,12 +41,13 @@ export const RecommendationGrid = () => {
             toggleImportRulesModal();
           }}
           source={SOURCE.UPLOAD_RULES}
+          disabled={isLocalOnlyModeEnabled}
         >
           <RQButton
             className="items-center"
             onClick={() => {
               trackUploadRulesButtonClicked("app_onboarding_recommendation_screen");
-              if (user.loggedIn) {
+              if (isLocalOnlyModeEnabled || user.loggedIn) {
                 toggleImportRulesModal();
               }
             }}

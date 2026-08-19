@@ -3,6 +3,7 @@ import { Row } from "antd";
 import { AuthConfirmationPopover } from "components/hoc/auth/AuthConfirmationPopover";
 import { PremiumIcon } from "components/common/PremiumIcon";
 import { RQButton, RQButtonProps } from "lib/design-system-v2/components";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 
 interface Props {
   icon: React.ReactNode;
@@ -36,11 +37,12 @@ const AuthPopoverButton: React.FC<Props> = ({
   isPremium = false,
 }) => {
   const [isChinaUser, setIsChinaUser] = useState<boolean>(false);
+  const isLocalOnlyModeEnabled = isLocalOnlyMode();
 
   return (
     <AuthConfirmationPopover
       title={`You need to sign up to ${buttonText.toLowerCase()} rules`}
-      disabled={!hasPopconfirm || isChinaUser}
+      disabled={!hasPopconfirm || isChinaUser || isLocalOnlyModeEnabled}
       callback={onClickHandler}
       source={authSource}
     >
@@ -54,7 +56,7 @@ const AuthPopoverButton: React.FC<Props> = ({
             return;
           }
           if (hasPopconfirm) {
-            isLoggedIn && onClickHandler();
+            (isLoggedIn || isLocalOnlyModeEnabled) && onClickHandler();
           } else {
             onClickHandler();
           }

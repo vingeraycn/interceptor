@@ -36,6 +36,7 @@ import { AuthConfirmationPopover } from "components/hoc/auth/AuthConfirmationPop
 import { useFeatureValue } from "@growthbook/growthbook-react";
 import { KEYBOARD_SHORTCUTS } from "../../../../../../../../constants/keyboardShortcuts";
 import { RBACButton } from "features/rbac";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 import "../RuleEditorActionButtons.css";
 import * as Sentry from "@sentry/react";
 
@@ -112,6 +113,7 @@ const CreateRuleButton = ({
   const user = useSelector(getUserAuthDetails);
   const appMode = useSelector(getAppMode);
   const userAttributes = useSelector(getUserAttributes);
+  const isLocalOnlyModeEnabled = isLocalOnlyMode();
 
   const onboardingVariation = useFeatureValue("onboarding_activation_v2", "variant1");
 
@@ -231,7 +233,7 @@ const CreateRuleButton = ({
     }
   };
 
-  return onboardingVariation === "variant4" && !user?.details?.isLoggedIn ? (
+  return onboardingVariation === "variant4" && !user?.details?.isLoggedIn && !isLocalOnlyModeEnabled ? (
     <AuthConfirmationPopover
       title={<div>You need to sign up to save the rule.</div>}
       disabled={user?.details?.isLoggedIn}
@@ -262,7 +264,7 @@ const CreateRuleButton = ({
         features={[FeatureLimitType.num_rules, premiumRuleLimitType]}
         onContinue={handleBtnOnClick}
         featureName={`${APP_CONSTANTS.RULE_TYPES_CONFIG[currentlySelectedRuleData.ruleType]?.NAME} rule`}
-        disabled={checkIsUpgradePopoverDisabled()}
+        disabled={isLocalOnlyModeEnabled || checkIsUpgradePopoverDisabled()}
         source={currentlySelectedRuleData.ruleType}
       >
         <RBACButton

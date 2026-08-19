@@ -22,6 +22,12 @@ window.__rq_debug__.backendEnv = getBackendEnv();
 window.__rq_debug__.nodeEnv = getNodeEnv();
 window.__rq_debug__.mode = import.meta?.env?.MODE;
 
+/**
+ * Local-only mode keeps rule authoring in the browser extension's local storage.
+ * It deliberately does not impersonate a Firebase user or change cloud auth.
+ */
+export const isLocalOnlyMode = (): boolean => process.env.VITE_LOCAL_MODE === "true";
+
 /* When running local emulator */
 export const isBackendEnvEmulator = (): boolean => {
   return getBackendEnv() === BACKEND_ENV.EMULATOR;

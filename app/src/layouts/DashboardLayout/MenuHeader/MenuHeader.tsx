@@ -19,6 +19,7 @@ import { Col } from "antd";
 import PremiumPlanBadge from "./PremiumPlanBadge/PremiumPlanBadge";
 import { getUserAuthDetails } from "store/slices/global/user/selectors";
 import GitHubButton from "react-github-btn";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 import "./menuHeader.scss";
 
 export const MenuHeader = () => {
@@ -27,6 +28,7 @@ export const MenuHeader = () => {
   const appMode = useSelector(getAppMode);
   const user = useSelector(getUserAuthDetails);
   const requestBotDetails = useSelector(getRequestBot);
+  const isLocalOnlyModeEnabled = isLocalOnlyMode();
 
   const gitHubStarButton = useMemo(() => {
     return (
@@ -45,7 +47,7 @@ export const MenuHeader = () => {
   return (
     <Header className="app-primary-header">
       <div className="app-primary-header-section app-primary-header__left">
-        <WorkspaceSelector />
+        {!isLocalOnlyModeEnabled && <WorkspaceSelector />}
         <a
           target="_blank"
           rel="noreferrer"
@@ -62,6 +64,7 @@ export const MenuHeader = () => {
       <div className="app-primary-header-section app-primary-header__right no-drag">
         <div className="header-gap-wide">
           {!isSafariBrowser() &&
+            !isLocalOnlyModeEnabled &&
             (appMode === GLOBAL_CONSTANTS.APP_MODES.DESKTOP ||
               (appMode !== GLOBAL_CONSTANTS.APP_MODES.DESKTOP &&
                 user?.details?.planDetails?.status !== "canceled")) && (
@@ -103,12 +106,14 @@ export const MenuHeader = () => {
         </div>
 
         <div className="app-primary-header__right-section">
-          <RQButton
-            type="transparent"
-            icon={<Settings />}
-            onClick={() => redirectToSettings(navigate, window.location.pathname, "header")}
-          />
-          <HeaderUser />
+          {!isLocalOnlyModeEnabled && (
+            <RQButton
+              type="transparent"
+              icon={<Settings />}
+              onClick={() => redirectToSettings(navigate, window.location.pathname, "header")}
+            />
+          )}
+          {!isLocalOnlyModeEnabled && <HeaderUser />}
         </div>
       </div>
     </Header>

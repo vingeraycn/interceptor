@@ -45,6 +45,7 @@ import { ImporterType } from "components/Home/types";
 import { getActiveWorkspaceId, isActiveWorkspaceShared } from "store/slices/workspaces/selectors";
 import { getLinkWithMetadata } from "modules/analytics/metadata";
 import { HeaderEditorImporterModal } from "../ImporterComponents/HeaderEditorImporter/HeaderEditorImporterModal";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 
 const { PATHS } = APP_CONSTANTS;
 
@@ -53,6 +54,7 @@ export const GettingStarted: React.FC = () => {
   const { state } = useLocation();
   const dispatch = useDispatch();
   const user = useSelector(getUserAuthDetails);
+  const isLocalOnlyModeEnabled = isLocalOnlyMode();
   const isSharedWorkspaceMode = useSelector(isActiveWorkspaceShared);
   const activeWorkspaceId = useSelector(getActiveWorkspaceId);
   const gettingStartedVideo = useRef(null);
@@ -96,6 +98,8 @@ export const GettingStarted: React.FC = () => {
     setIsImportRulesModalActive(true);
     trackRulesImportStarted();
   };
+
+  const canUploadRules = isLocalOnlyModeEnabled || Boolean(user?.details?.isLoggedIn);
 
   useEffect(() => {
     if (state?.modal) {
@@ -262,7 +266,7 @@ export const GettingStarted: React.FC = () => {
               title="You need to sign up to upload rules"
               callback={handleUploadRulesClick}
               source={SOURCE.UPLOAD_RULES}
-              disabled={window.isChinaUser}
+              disabled={isLocalOnlyModeEnabled || window.isChinaUser}
             >
               <Button
                 type="link"
@@ -271,7 +275,7 @@ export const GettingStarted: React.FC = () => {
                 onClick={() => {
                   trackRulesEmptyStateClicked("import_json");
                   trackUploadRulesButtonClicked(SOURCE.GETTING_STARTED);
-                  user?.details?.isLoggedIn && handleUploadRulesClick();
+                  canUploadRules && handleUploadRulesClick();
                 }}
               >
                 Upload rules

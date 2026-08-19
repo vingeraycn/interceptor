@@ -5,6 +5,7 @@ import { redirectToRoot } from "utils/RedirectionUtils";
 import { Outlet, useNavigate } from "react-router-dom";
 import Footer from "components/sections/Footer";
 import { useIsBrowserStackIntegrationOn } from "hooks/useIsBrowserStackIntegrationOn";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 import "./index.scss";
 
 interface MinimalLayoutProps {
@@ -14,6 +15,7 @@ interface MinimalLayoutProps {
 const MinimalLayout: React.FC<MinimalLayoutProps> = ({ children = null }) => {
   const navigate = useNavigate();
   const isBrowserStackIntegrationOn = useIsBrowserStackIntegrationOn();
+  const isLocalOnlyModeEnabled = isLocalOnlyMode();
 
   return (
     <div className="minimal-layout">
@@ -27,7 +29,7 @@ const MinimalLayout: React.FC<MinimalLayoutProps> = ({ children = null }) => {
           onClick={() => redirectToRoot(navigate)}
         />
 
-        <HeaderUser />
+        {!isLocalOnlyModeEnabled && <HeaderUser />}
       </Layout.Header>
 
       <div className="minimal-layout-main">{children ?? <Outlet />}</div>

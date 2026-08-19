@@ -4,6 +4,7 @@ import { redirectToRules } from "utils/RedirectionUtils";
 import { Layout, Col, Row } from "antd";
 import HeaderUser from "layouts/DashboardLayout/MenuHeader/HeaderUser";
 import { useIsBrowserStackIntegrationOn } from "hooks/useIsBrowserStackIntegrationOn";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 import "./index.css";
 
 interface HeaderProps {
@@ -25,7 +26,7 @@ export const FullPageHeader: React.FC<HeaderProps> = ({ showUserHeader = false, 
             onClick={() => (doRedirectOnLogoClick ? redirectToRules(navigate) : {})}
           />
         </Col>
-        {showUserHeader && <HeaderUser />}
+        {showUserHeader && !isLocalOnlyMode() && <HeaderUser />}
       </Row>
     </Layout.Header>
   );

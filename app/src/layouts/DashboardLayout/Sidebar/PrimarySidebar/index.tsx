@@ -27,6 +27,7 @@ import RulesIcon from "/assets/media/common/feature_rules.svg";
 import ApiIcon from "/assets/media/common/feature_apis.svg";
 import FilesIcon from "/assets/media/common/feature_files.svg";
 import SessionsIcon from "/assets/media/common/feature_sessions.svg";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 
 import "./PrimarySidebar.css";
 
@@ -67,6 +68,7 @@ export const PrimarySidebar: React.FC = () => {
   const isSlackConnectFeatureEnabled = useFeatureIsOn("slack_connect");
   const isSlackInviteVisible = useFetchSlackInviteVisibility();
   const isLocalSyncEnabled = useCheckLocalSyncSupport();
+  const isLocalOnlyModeEnabled = isLocalOnlyMode();
 
   const isDesktopSessionsCompatible =
     useFeatureIsOn("desktop-sessions") && isFeatureCompatible(FEATURES.DESKTOP_SESSIONS);
@@ -209,7 +211,7 @@ export const PrimarySidebar: React.FC = () => {
       </ul>
       <div className="primary-sidebar-bottom-btns">
         {isSlackConnectFeatureEnabled && isSlackInviteVisible && <JoinSlackButton />}
-        {!isLocalSyncEnabled && <InviteButton />}
+        {!isLocalSyncEnabled && !isLocalOnlyModeEnabled && <InviteButton />}
       </div>
     </div>
   );

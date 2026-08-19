@@ -14,6 +14,7 @@ import { redirectToUrl } from "utils/RedirectionUtils";
 import LINKS from "config/constants/sub/links";
 import "./index.scss";
 import { isCompanyEmail } from "utils/mailCheckerUtils";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 
 interface PremiumFeatureProps {
   onContinue?: () => void;
@@ -48,6 +49,7 @@ export const PremiumFeature: React.FC<PremiumFeatureProps> = ({
   const { getFeatureLimitValue, checkIfFeatureLimitReached } = useFeatureLimiter();
   const [openPopup, setOpenPopup] = useState(false);
   const isUpgradePopoverEnabled = useFeatureIsOn("show_upgrade_popovers");
+  const isLocalOnlyModeEnabled = isLocalOnlyMode();
 
   const isExceedingLimits = useMemo(
     () => features.some((feat) => !(getFeatureLimitValue(feat) && !checkIfFeatureLimitReached(feat, "reached"))),
@@ -72,6 +74,7 @@ export const PremiumFeature: React.FC<PremiumFeatureProps> = ({
       user?.details?.profile?.isEmailVerified &&
       isCompanyEmail(user.details?.emailType) &&
       !disabled &&
+      !isLocalOnlyModeEnabled &&
       features ? (
         <>
           <RequestFeatureModal
@@ -98,7 +101,7 @@ export const PremiumFeature: React.FC<PremiumFeatureProps> = ({
       ) : (
         <Popconfirm
           zIndex={10010}
-          disabled={!isExceedingLimits || !features || disabled || !isUpgradePopoverEnabled}
+          disabled={!isExceedingLimits || !features || disabled || isLocalOnlyModeEnabled || !isUpgradePopoverEnabled}
           overlayClassName={`premium-feature-popover`}
           autoAdjustOverflow
           showArrow={false}
@@ -158,7 +161,7 @@ export const PremiumFeature: React.FC<PremiumFeatureProps> = ({
             return React.cloneElement(child as React.ReactElement, {
               onClick: (e: any) => {
                 onClickCallback?.(e);
-                if (!isExceedingLimits || !features || disabled || !isUpgradePopoverEnabled) {
+                if (!isExceedingLimits || !features || disabled || isLocalOnlyModeEnabled || !isUpgradePopoverEnabled) {
                   onContinue();
                 }
               },
