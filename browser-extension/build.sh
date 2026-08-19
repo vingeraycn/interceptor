@@ -17,7 +17,11 @@ cd ..
 
 echo -e "\n\033[1;37m\033[44m***** Building MV3 extension *****\033[0m"
 cd mv3
-npm run build:current
+if [[ "$1" == "local" ]]; then
+  EMBED_APP=true npm run build:current
+else
+  npm run build:current
+fi
 cd ..
 
 # SessionBear extension is not used anymore so the source code is deprecated and will be removed in the future

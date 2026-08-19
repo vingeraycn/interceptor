@@ -12,4 +12,25 @@ export interface ExtensionConfig {
   LANDING_PAGE_BASE_URL: string;
 }
 
+const isEmbeddedAppRuntime = (): boolean => {
+  if (config.browser !== "chrome" || typeof chrome === "undefined" || !chrome.runtime?.getManifest) {
+    return false;
+  }
+
+  return !chrome.runtime.getManifest().action?.default_popup;
+};
+
+export const getAppUrl = (path = ""): string => {
+  if (!isEmbeddedAppRuntime()) {
+    return `${config.WEB_URL}${path}`;
+  }
+
+  const routePath = path.startsWith("/") ? path : `/${path}`;
+  return `${chrome.runtime.getURL("index.html")}#${routePath}`;
+};
+
+export const getAppOrigin = (): string => {
+  return new URL(getAppUrl()).origin;
+};
+
 export default config as ExtensionConfig;

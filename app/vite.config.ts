@@ -14,12 +14,14 @@ import { theme } from "./src/lib/design-system/theme";
 const config = async ({ mode }) => {
   // To Be used withing the vite.config.ts file
   process.env = { ...process.env, ...loadEnv(mode, process.cwd(), "") };
+  const isExtensionBuild = process.env.VITE_EXTENSION_BUILD === "true";
 
   const { viteStaticCopy } = await import("vite-plugin-static-copy");
 
   const generateSourcemap = process.env.VITE_GENERATE_SOURCEMAP === "true";
 
   return defineConfig({
+    base: isExtensionBuild ? "./" : "/",
     define: {
       global: "globalThis",
       "process.env": {

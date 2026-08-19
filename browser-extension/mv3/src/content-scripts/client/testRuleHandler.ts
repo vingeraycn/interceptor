@@ -1,4 +1,4 @@
-import config from "common/config";
+import { getAppUrl } from "common/config";
 import { CLIENT_MESSAGES, EXTENSION_MESSAGES, STORAGE_KEYS } from "common/constants";
 import rulesStorageService from "../../rulesStorageService";
 import { getRecord } from "common/storage";
@@ -135,11 +135,11 @@ export const showImplicitTestRuleWidget = async () => {
   testRuleWidget.style.display = "none";
 
   testRuleWidget.addEventListener("view_rule_in_editor", (data: any) => {
-    window.open(`${config.WEB_URL}/rules/editor/edit/${data.detail.ruleId}`, "_blank");
+    window.open(getAppUrl(`/rules/editor/edit/${data.detail.ruleId}`), "_blank");
   });
 
   testRuleWidget.addEventListener("open_app_settings", () => {
-    window.open(`${config.WEB_URL}/settings/global-settings`, "_blank");
+    window.open(getAppUrl("/settings/global-settings"), "_blank");
   });
 
   // testRuleWidget.addEventListener("rule_applied_listener_active", () => {

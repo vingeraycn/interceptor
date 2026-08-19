@@ -2,7 +2,7 @@ import React from "react";
 import BlockedExtension from "../../../../resources/icons/blockedExtension.svg";
 import "./blockedExtensionView.scss";
 import { Button } from "antd";
-import config from "../../../config";
+import { getAppUrl } from "../../../config";
 
 export const BlockedExtensionView = () => {
   return (
@@ -16,7 +16,7 @@ export const BlockedExtensionView = () => {
         type="primary"
         onClick={() => {
           chrome.tabs.create({
-            url: `${config.WEB_URL}/settings/global-settings?source=popup`,
+            url: getAppUrl("/settings/global-settings?source=popup"),
           });
         }}
       >

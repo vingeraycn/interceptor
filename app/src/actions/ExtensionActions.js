@@ -3,11 +3,21 @@ import { CONSTANTS as GLOBAL_CONSTANTS } from "@requestly/requestly-core";
 import * as semver from "semver";
 import UAParser from "ua-parser-js";
 
+const isExtensionPage = () => window.location.protocol === "chrome-extension:";
+
 export function getExtensionVersion() {
+  if (isExtensionPage()) {
+    return window.chrome.runtime.getManifest().version;
+  }
+
   return document.documentElement.getAttribute("rq-ext-version");
 }
 
 export function getExtensionManifestVersion() {
+  if (isExtensionPage()) {
+    return String(window.chrome.runtime.getManifest().manifest_version);
+  }
+
   return document.documentElement.getAttribute("rq-ext-mv");
 }
 
@@ -16,7 +26,7 @@ export function isExtensionManifestVersion3() {
 }
 
 export function isExtensionInstalled() {
-  return !!getExtensionVersion();
+  return isExtensionPage() || !!getExtensionVersion();
 }
 
 export const isSafariBrowser = () => {

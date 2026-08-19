@@ -1,5 +1,7 @@
 import Logger from "lib/logger";
 
+const isExtensionPage = () => window.location.protocol === "chrome-extension:";
+
 const PageScriptMessageHandler = {
   eventCallbackMap: {},
   messageListeners: {},
@@ -47,6 +49,16 @@ const PageScriptMessageHandler = {
     this.registerCallback(message, callback);
 
     message.source = this.constants.SOURCE;
+
+    if (isExtensionPage()) {
+      if (callback) {
+        window.chrome.runtime.sendMessage(message, callback);
+      } else {
+        window.chrome.runtime.sendMessage(message);
+      }
+      return;
+    }
+
     window.postMessage(message, this.constants.DOMAIN);
   },
 
@@ -107,6 +119,18 @@ const PageScriptMessageHandler = {
 
     if (!this.isInitialized) {
       window.addEventListener("message", this.handleMessageReceived.bind(this));
+
+      if (isExtensionPage()) {
+        window.chrome.runtime.onMessage.addListener((message) => {
+          if (message?.requestId && this.eventCallbackMap[`${message.action}_${message.requestId}`]) {
+            this.invokeCallback(message);
+            return;
+          }
+
+          this.messageHandler(message);
+        });
+      }
+
       this.isInitialized = true;
     }
   },

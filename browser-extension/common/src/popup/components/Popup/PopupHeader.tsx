@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Button, Col, Row, Switch, Typography, Tooltip } from "antd";
-import config from "../../../config";
+import { getAppUrl } from "../../../config";
 import { EVENT, sendEvent } from "../../events";
 
 interface PopupHeaderProps {
@@ -10,7 +10,7 @@ interface PopupHeaderProps {
 
 const PopupHeader: React.FC<PopupHeaderProps> = ({ isExtensionEnabled, handleToggleExtensionStatus }) => {
   const onOpenAppButtonClick = useCallback(() => {
-    window.open(`${config.WEB_URL}?source=popup`, "_blank");
+    window.open(getAppUrl("?source=popup"), "_blank");
     sendEvent(EVENT.OPEN_APP_CLICKED);
   }, []);
 

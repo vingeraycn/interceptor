@@ -10,7 +10,7 @@ import { PushpinOutlined, CheckCircleOutlined, ClockCircleOutlined } from "@ant-
 import { icons } from "../../ruleTypeIcons";
 import { Rule, RuleType } from "../../../types";
 import { EVENT, sendEvent } from "../../events";
-import config from "../../../config";
+import { getAppUrl } from "../../../config";
 import "./popupTabs.css";
 import { EXTENSION_MESSAGES } from "../../../constants";
 
@@ -100,10 +100,7 @@ const PopupTabs: React.FC<{
           </>
         ),
         clickHandler: () =>
-          handleRulesDropdownItemClick(
-            `${config.WEB_URL}/rules/editor/create/Response?source=popup`,
-            RuleType.RESPONSE
-          ),
+          handleRulesDropdownItemClick(getAppUrl("/rules/editor/create/Response?source=popup"), RuleType.RESPONSE),
       },
       {
         key: "modify_headers",
@@ -114,7 +111,7 @@ const PopupTabs: React.FC<{
           </>
         ),
         clickHandler: () =>
-          handleRulesDropdownItemClick(`${config.WEB_URL}/rules/editor/create/Headers?source=popup`, RuleType.HEADERS),
+          handleRulesDropdownItemClick(getAppUrl("/rules/editor/create/Headers?source=popup"), RuleType.HEADERS),
       },
       {
         key: "redirect_request",
@@ -125,10 +122,7 @@ const PopupTabs: React.FC<{
           </>
         ),
         clickHandler: () =>
-          handleRulesDropdownItemClick(
-            `${config.WEB_URL}/rules/editor/create/Redirect?source=popup`,
-            RuleType.REDIRECT
-          ),
+          handleRulesDropdownItemClick(getAppUrl("/rules/editor/create/Redirect?source=popup"), RuleType.REDIRECT),
       },
       {
         key: "replace_string",
@@ -139,7 +133,7 @@ const PopupTabs: React.FC<{
           </>
         ),
         clickHandler: () =>
-          handleRulesDropdownItemClick(`${config.WEB_URL}/rules/editor/create/Replace?source=popup`, RuleType.REPLACE),
+          handleRulesDropdownItemClick(getAppUrl("/rules/editor/create/Replace?source=popup"), RuleType.REPLACE),
       },
       { key: "divider" },
       {
@@ -152,7 +146,7 @@ const PopupTabs: React.FC<{
         ),
         clickHandler: () => {
           sendEvent(EVENT.EXTENSION_VIEW_ALL_MODIFICATIONS_CLICKED);
-          handleRulesDropdownItemClick(`${config.WEB_URL}/rules/create?source=popup`);
+          handleRulesDropdownItemClick(getAppUrl("/rules/create?source=popup"));
         },
       },
     ],

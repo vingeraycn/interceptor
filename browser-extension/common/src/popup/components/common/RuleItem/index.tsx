@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { Col, Popconfirm, Row, Switch, Tooltip } from "antd";
 import PinAction from "../PinAction";
 import { Rule, Status } from "../../../../types";
-import config from "../../../../config";
+import { getAppUrl } from "../../../../config";
 import { RULE_TITLES } from "../../../../constants";
 import { useRecords } from "../../../contexts/RecordsContext";
 import { icons } from "../../../ruleTypeIcons";
@@ -62,7 +62,7 @@ const RuleItem: React.FC<RuleItemProps> = ({
           className="record-name-container link"
           onClick={() => {
             sendEvent(EVENT.EXTENSION_RULE_CLICKED, { rule_type: rule.ruleType });
-            window.open(`${config.WEB_URL}/rules/editor/edit/${rule.id}`, "_blank");
+            window.open(getAppUrl(`/rules/editor/edit/${rule.id}`), "_blank");
           }}
         >
           <Row wrap={false} align="middle" className="rule-name-container">

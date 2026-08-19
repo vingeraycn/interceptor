@@ -1,6 +1,6 @@
 import { EXTENSION_MESSAGES } from "common/constants";
 import { getAllSupportedWebURLs } from "../../utils";
-import config from "common/config";
+import { getAppUrl } from "common/config";
 
 type TabId = chrome.tabs.Tab["id"];
 
@@ -102,13 +102,17 @@ class TabService {
       appTabs = [...appTabs, ...tabs];
     }
 
-    return appTabs;
+    const embeddedAppUrl = chrome.runtime.getURL("index.html");
+    const allTabs = await chrome.tabs.query({});
+    const embeddedAppTabs = allTabs.filter((tab) => tab.url?.startsWith(embeddedAppUrl));
+
+    return [...appTabs, ...embeddedAppTabs].filter(
+      (tab, index, tabs) => tabs.findIndex((candidate) => candidate.id === tab.id) === index
+    );
   }
 
   async createAppTab(): Promise<chrome.tabs.Tab> {
-    const webUrl = config.WEB_URL;
-
-    return chrome.tabs.create({ url: webUrl });
+    return chrome.tabs.create({ url: getAppUrl("/home") });
   }
 
   addOrUpdateTab(tab: TabData) {

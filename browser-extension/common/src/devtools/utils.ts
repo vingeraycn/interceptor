@@ -1,4 +1,4 @@
-import config from "../config";
+import { getAppOrigin, getAppUrl } from "../config";
 import { Rule } from "../types";
 import { ResourceTypeFilterValue } from "./components/ResourceTypeFilter";
 import { EVENT, sendEvent } from "./events";
@@ -20,7 +20,7 @@ export const createRule = <T extends Rule>(
   inputSelectorToFocus?: string
 ) => {
   sendEvent(EVENT.RULE_CREATION_WORKFLOW_STARTED, { rule_type: ruleTypeUrlFragment });
-  const editorUrl = `${config.WEB_URL}/rules/editor/create/${ruleTypeUrlFragment}?source=devtool`;
+  const editorUrl = getAppUrl(`/rules/editor/create/${ruleTypeUrlFragment}?source=devtool`);
   let editorWindow: Window;
   const onMessageReceived = (event: MessageEvent<PostMessageData>) => {
     const { author, action, payload } = event.data;
@@ -36,7 +36,7 @@ export const createRule = <T extends Rule>(
             inputSelectorToFocus,
           },
         },
-        config.WEB_URL
+        getAppOrigin()
       );
       window.removeEventListener("message", onMessageReceived);
     }

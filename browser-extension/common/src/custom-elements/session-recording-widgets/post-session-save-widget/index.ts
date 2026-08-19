@@ -3,7 +3,7 @@ import { setInnerHTML } from "../../utils";
 import closeIcon from "../../../../resources/icons/close.svg";
 import checkIcon from "../../../../resources/icons/check.svg";
 import styles from "./index.css";
-import config from "../../../config";
+import { getAppUrl } from "../../../config";
 
 const TAG_NAME = "rq-post-session-save-widget";
 
@@ -65,7 +65,7 @@ class RQPostSessionSaveWidget extends HTMLElement {
     const copyLinkButton = this.shadowRoot.querySelector(".session-copy-link-btn");
     copyLinkButton.addEventListener("click", () => {
       copyLinkButton.innerHTML = "Link copied!";
-      navigator.clipboard.writeText(`${config.WEB_URL}/sessions/saved/${this.#sessionId}`);
+      navigator.clipboard.writeText(getAppUrl(`/sessions/saved/${this.#sessionId}`));
       setTimeout(() => {
         copyLinkButton.innerHTML = "Copy link";
       }, 1000);

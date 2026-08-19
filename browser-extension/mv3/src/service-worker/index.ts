@@ -11,6 +11,7 @@ import {
   initNetworkRecordingExtensionToggleListener,
   refreshIncognitoAllowedCache,
 } from "./services/networkRecording";
+import { initExtensionApp } from "./services/extensionApp";
 
 // initialize
 (async () => {
@@ -27,4 +28,5 @@ import {
   initNetworkRecordingPort();
   initNetworkRecordingExtensionToggleListener();
   refreshIncognitoAllowedCache();
+  initExtensionApp();
 })();

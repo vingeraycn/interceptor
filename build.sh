@@ -34,7 +34,11 @@ cd ..
 
 echo -e "\n\033[1;37m\033[44m***** Building New React App *****\033[0m"
 cd app
-bash build.sh ${env}
+if [[ "$env" == "local" ]]; then
+  VITE_EXTENSION_BUILD=true bash build.sh ${env}
+else
+  bash build.sh ${env}
+fi
 cd ..
 
 echo -e "\n\033[1;37m\033[44m***** Building browser extension *****\033[0m"

@@ -8,6 +8,7 @@ import { browser, WEB_URL, OTHER_WEB_URLS } from "../config/dist/config.build.js
 
 const OUTPUT_DIR = "dist";
 const isProductionBuildMode = process.env.BUILD_MODE === "production";
+const isEmbeddedAppBuild = process.env.EMBED_APP === "true";
 
 const generateUrlPattern = (urlString, includePort = true) => {
   try {
@@ -40,6 +41,10 @@ const processManifest = (content) => {
   contentScripts[0].matches = webURLPatterns;
   contentScripts[1].exclude_matches = webURLPatterns;
 
+  if (isEmbeddedAppBuild) {
+    delete manifestJson.action.default_popup;
+  }
+
   if (!isProductionBuildMode) {
     manifestJson.commands = {
       ...manifestJson.commands,
@@ -63,6 +68,48 @@ const processManifest = (content) => {
 };
 
 const commonPlugins = [typescript(), json()];
+const copyTargets = [
+  { src: "resources", dest: OUTPUT_DIR },
+  { src: "_locales", dest: OUTPUT_DIR },
+  {
+    src: `src/manifest.${browser}.json`,
+    dest: OUTPUT_DIR,
+    rename: "manifest.json",
+    transform: processManifest,
+  },
+  {
+    src: "node_modules/@requestly/web-sdk/dist/requestly-web-sdk.js",
+    dest: `${OUTPUT_DIR}/libs`,
+  },
+  { src: "../common/dist/devtools", dest: OUTPUT_DIR },
+  { src: "../common/dist/popup", dest: OUTPUT_DIR },
+  { src: "../common/dist/sidepanel", dest: OUTPUT_DIR },
+  { src: "../common/dist/lib/customElements.js", dest: `${OUTPUT_DIR}/libs` },
+];
+
+if (isEmbeddedAppBuild) {
+  copyTargets.push(
+    {
+      src: "../../app/build/index.html",
+      dest: OUTPUT_DIR,
+      transform: (content) =>
+        content
+          .toString()
+          .replace('href="/manifest.json"', 'href="/app-manifest.json"')
+          .replace('href="./manifest.json"', 'href="./app-manifest.json"'),
+    },
+    { src: "../../app/build/assets", dest: OUTPUT_DIR },
+    { src: "../../app/build/desktop", dest: OUTPUT_DIR },
+    { src: "../../app/build/firefox", dest: OUTPUT_DIR },
+    { src: "../../app/build/favicon.png", dest: OUTPUT_DIR },
+    { src: "../../app/build/manifest.json", dest: OUTPUT_DIR, rename: "app-manifest.json" },
+    { src: "../../app/build/sessionBearFavicon.png", dest: OUTPUT_DIR },
+    { src: "../../app/build/sessionBear_lg.svg", dest: OUTPUT_DIR },
+    { src: "../../app/build/tree-sitter-bash.wasm", dest: OUTPUT_DIR },
+    { src: "../../app/build/tree-sitter.wasm", dest: OUTPUT_DIR }
+  );
+}
+
 const commonConfig = {
   // https://github.com/vitejs/vite-plugin-react/pull/144
   onwarn(warning, defaultHandler) {
@@ -91,24 +138,7 @@ export default [
       nodeResolve(),
       ...commonPlugins,
       copy({
-        targets: [
-          { src: "resources", dest: OUTPUT_DIR },
-          { src: "_locales", dest: OUTPUT_DIR },
-          {
-            src: `src/manifest.${browser}.json`,
-            dest: OUTPUT_DIR,
-            rename: "manifest.json",
-            transform: processManifest,
-          },
-          {
-            src: "node_modules/@requestly/web-sdk/dist/requestly-web-sdk.js",
-            dest: `${OUTPUT_DIR}/libs`,
-          },
-          { src: "../common/dist/devtools", dest: OUTPUT_DIR },
-          { src: "../common/dist/popup", dest: OUTPUT_DIR },
-          { src: "../common/dist/sidepanel", dest: OUTPUT_DIR },
-          { src: "../common/dist/lib/customElements.js", dest: `${OUTPUT_DIR}/libs` },
-        ],
+        targets: copyTargets,
       }),
     ],
   },

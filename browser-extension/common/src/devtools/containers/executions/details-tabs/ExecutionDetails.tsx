@@ -1,7 +1,7 @@
 import React from "react";
 import { ExecutionEvent } from "../../../types";
 import { PropertyRow } from "@requestly-ui/resource-table";
-import config from "../../../../config";
+import { getAppUrl } from "../../../../config";
 import "./executionDetails.scss";
 
 interface Props {
@@ -15,7 +15,7 @@ const ExecutionDetails: React.FC<Props> = ({ execution }) => {
       <PropertyRow
         name="Rule applied"
         value={
-          <a target="_blank" href={`${config.WEB_URL}/rules/editor/edit/${execution.rule.id}`}>
+          <a target="_blank" href={getAppUrl(`/rules/editor/edit/${execution.rule.id}`)}>
             {execution.rule.name}
           </a>
         }

@@ -22,6 +22,8 @@ BROWSER=chrome ENV=local npm run config
 npm run build
 ```
 
+For the local embedded App build, run `bash build.sh local` from the repository root. This builds the Web App with extension-relative assets, copies its entry and assets into `browser-extension/mv3/dist`, and makes the extension Icon open `index.html#/home` inside the extension.
+
 ### Load extension in Chrome
 
 - Open [chrome://extensions](chrome://extensions), enable Developer mode, and choose `Load unpacked`.

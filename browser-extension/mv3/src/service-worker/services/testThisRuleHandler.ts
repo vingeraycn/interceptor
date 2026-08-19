@@ -2,7 +2,7 @@ import { CLIENT_MESSAGES, EXTENSION_MESSAGES, STORAGE_KEYS } from "common/consta
 import { TAB_SERVICE_DATA, tabService } from "./tabService";
 import { getRecord, saveRecord } from "common/storage";
 import { generateUUID } from "common/utils";
-import config from "common/config";
+import { getAppUrl } from "common/config";
 
 interface TestReport {
   timestamp: number;
@@ -47,7 +47,7 @@ export const saveTestRuleResult = (payload: any, senderTab: chrome.tabs.Tab) => 
       // create new tab with URL if opener tab does not exist
       chrome.tabs.create(
         {
-          url: `${config.WEB_URL}/rules/editor/edit/${payload.ruleId}`,
+          url: getAppUrl(`/rules/editor/edit/${payload.ruleId}`),
         },
         (tab) => {
           tabService.ensureTabLoadingComplete(tab.id).then(() => {

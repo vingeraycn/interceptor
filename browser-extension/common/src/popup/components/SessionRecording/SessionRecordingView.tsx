@@ -8,7 +8,7 @@ import StopRecordingIcon from "../../../../resources/icons/stopRecording.svg";
 import ReplayLastFiveMinuteIcon from "../../../../resources/icons/replayLastFiveMinute.svg";
 import InfoIcon from "../../../../resources/icons/info.svg";
 import ShieldIcon from "../../../../resources/icons/shield.svg";
-import config from "../../../config";
+import { getAppUrl } from "../../../config";
 import { EVENT, sendEvent } from "../../events";
 import "./sessionRecordingView.css";
 
@@ -75,7 +75,7 @@ const SessionRecordingView: React.FC = () => {
 
   const handleConfigureBtnClick = useCallback(() => {
     sendEvent(EVENT.SESSION_RECORDINGS_CONFIG_OPENED);
-    window.open(`${config.WEB_URL}/settings/sessionbook?source=popup`, "_blank");
+    window.open(getAppUrl("/settings/sessionbook?source=popup"), "_blank");
   }, []);
 
   const watchReplayBtnTooltipContent =

@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, createHashRouter } from "react-router-dom";
 import { routesV2 } from "routes";
 import * as Sentry from "@sentry/react";
 
@@ -10,7 +10,10 @@ declare global {
 
 /** Common things which do not depend on routes for App **/
 const App = () => {
-  const router = Sentry.wrapCreateBrowserRouterV6(createBrowserRouter)(routesV2);
+  const router =
+    window.location.protocol === "chrome-extension:"
+      ? Sentry.wrapCreateBrowserRouterV6(createHashRouter)(routesV2)
+      : Sentry.wrapCreateBrowserRouterV6(createBrowserRouter)(routesV2);
 
   return <RouterProvider router={router} />;
 };
