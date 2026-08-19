@@ -19,6 +19,19 @@ const config = async ({ mode }) => {
   const { viteStaticCopy } = await import("vite-plugin-static-copy");
 
   const generateSourcemap = process.env.VITE_GENERATE_SOURCEMAP === "true";
+  const removeExtensionOnlyExternalScripts = isExtensionBuild
+    ? {
+        name: "remove-extension-only-external-scripts",
+        transformIndexHtml(html: string) {
+          return html
+            .replace(
+              /\s*<!-- Global site tag \(gtag\.js\) - Google Analytics -->\s*<script async src="https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=G-7FZEBFLWK0"><\/script>\s*<script>[\s\S]*?<\/script>/,
+              ""
+            )
+            .replace(/\s*<script src="https:\/\/accounts\.google\.com\/gsi\/client" async><\/script>/, "");
+        },
+      }
+    : undefined;
 
   return defineConfig({
     base: isExtensionBuild ? "./" : "/",
@@ -32,6 +45,7 @@ const config = async ({ mode }) => {
     },
     plugins: [
       nodePolyfills(),
+      removeExtensionOnlyExternalScripts,
 
       // For files which has JSX elements in .js files
       {
