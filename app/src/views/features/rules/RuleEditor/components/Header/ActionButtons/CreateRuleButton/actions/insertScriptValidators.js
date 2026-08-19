@@ -1,7 +1,9 @@
 import { parse } from "acorn";
 import { simple } from "acorn-walk";
-import { HtmlValidate, StaticConfigLoader } from "html-validate";
 import { CONSTANTS as GLOBAL_CONSTANTS } from "@requestly/requestly-core";
+
+const isExtensionPage = () => window.location.protocol === "chrome-extension:";
+let htmlValidateModulePromise;
 
 /* LOGICAL VALIDATORS - currently not being fully applied */
 export const SCRIPT_LOGICAL_ERRORS = {
@@ -156,6 +158,15 @@ export const removeUrlAttribute = (attributes, codeType) => {
 
 /* Pass the code string through an HTML linter and return errors if any */
 async function htmlValidateRawCodeString(codeString) {
+  if (isExtensionPage()) {
+    return {
+      isValid: true,
+      validationErrors: [],
+    };
+  }
+
+  htmlValidateModulePromise ??= import("html-validate");
+  const { HtmlValidate, StaticConfigLoader } = await htmlValidateModulePromise;
   const loader = new StaticConfigLoader({
     extends: ["html-validate:recommended"],
     elements: ["html5"],

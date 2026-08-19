@@ -1,3 +1,4 @@
+import path from "node:path";
 import { defineConfig, transformWithEsbuild, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import viteTsconfigPaths from "vite-tsconfig-paths";
@@ -19,6 +20,7 @@ const config = async ({ mode }) => {
   const { viteStaticCopy } = await import("vite-plugin-static-copy");
 
   const generateSourcemap = process.env.VITE_GENERATE_SOURCEMAP === "true";
+  const extensionHtmlValidateStub = path.resolve(process.cwd(), "src/utils/extensionHtmlValidateStub.ts");
   const removeExtensionOnlyExternalScripts = isExtensionBuild
     ? {
         name: "remove-extension-only-external-scripts",
@@ -88,6 +90,7 @@ const config = async ({ mode }) => {
       // fix less import by: @import ~
       // https://github.com/vitejs/vite/issues/2185#issuecomment-784637827
       alias: [
+        ...(isExtensionBuild ? [{ find: "html-validate", replacement: extensionHtmlValidateStub }] : []),
         {
           find: /^~/,
           replacement: "",

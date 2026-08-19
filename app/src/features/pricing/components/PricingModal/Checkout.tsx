@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Col, Divider, Result, Row, Space, Spin, Typography } from "antd";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js/pure";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { RQButton } from "lib/design-system/components";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -14,6 +14,7 @@ import { getBillingTeamRedirectURL } from "backend/billing";
 import "./index.scss";
 import PATHS from "config/constants/sub/paths";
 import { trackCheckoutCompleted } from "modules/analytics/events/misc/business/checkout";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 
 interface CheckoutProps {
   clientSecret: string;
@@ -24,7 +25,7 @@ interface CheckoutProps {
   source: string;
   onCheckoutCompleted?: () => void;
 }
-const stripePromise = loadStripe(process.env.VITE_REACT_APP_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = isLocalOnlyMode() ? null : loadStripe(process.env.VITE_REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 export const Checkout: React.FC<CheckoutProps> = ({
   clientSecret,

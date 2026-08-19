@@ -5,7 +5,7 @@ import { Row, Col, Button } from "antd";
 import { toast } from "utils/Toast.js";
 // STRIPE
 import { CardElement, useStripe, useElements, Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js/pure";
 // SUB COMPONENTS
 import Alert from "../../misc/Alert";
 import SpinnerColumn from "../../misc/SpinnerColumn";
@@ -19,6 +19,7 @@ import { CONSTANTS as GLOBAL_CONSTANTS } from "@requestly/requestly-core";
 import ProCard from "@ant-design/pro-card";
 import { CheckOutlined } from "@ant-design/icons";
 import Jumbotron from "components/bootstrap-legacy/jumbotron";
+import { isLocalOnlyMode } from "utils/EnvUtils";
 
 const UpdatePaymentMethod = () => {
   const navigate = useNavigate();
@@ -250,7 +251,9 @@ const UpdatePaymentMethodIndex = () => {
 
   useEffect(() => {
     // Initialize Stripe
-    if (!stripePromise) setStripePromise(loadStripe(process.env.VITE_REACT_APP_STRIPE_PUBLISHABLE_KEY));
+    if (!isLocalOnlyMode() && !stripePromise) {
+      setStripePromise(loadStripe(process.env.VITE_REACT_APP_STRIPE_PUBLISHABLE_KEY));
+    }
   }, [stripePromise]);
 
   return (
