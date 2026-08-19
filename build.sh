@@ -11,8 +11,8 @@ fi
 
 # Build script for all components
 echo -e "\n\033[1;37m\033[44m***** Cleaning public directory *****\033[0m"
-rm -r public
-mkdir public
+rm -rf public
+mkdir -p public
 
 echo -e "\n\033[1;37m\033[44m***** Generating Analytics Vendors Dist Files *****\033[0m"
 cd common/analytics-vendors/

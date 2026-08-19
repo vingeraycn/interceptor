@@ -43,8 +43,9 @@ This fork enables `VITE_LOCAL_MODE=true` by default. In this mode, rule upload/i
 
 The mode does not fabricate a Firebase user or bypass authentication for cloud-only features. To use the local rule workflow on another computer:
 
-1. Clone this fork and install the repository dependencies.
-2. Build the browser extension with `ENV=local`.
-3. Load `browser-extension/mv3/dist` as an unpacked Chrome extension.
-4. Start the Web App with `npm run start` from `app`.
-5. Open `http://localhost:3000`.
+1. Clone this fork and enter the repository root.
+2. Run `bash install.sh` to install all repository dependencies.
+3. Run `bash build.sh local` to build the local Web App and Chrome extension.
+4. Load `browser-extension/mv3/dist` as an unpacked Chrome extension.
+5. Run `npm run start` from `app`.
+6. Open `http://localhost:3000`.
