@@ -21,7 +21,7 @@ npm install
 ### Prerequisite - Build and Install Local Extension
 
 Some features require the Requestly Extension to be installed. Follow the steps below to build and install the extension
-https://github.com/requestly/interceptor/blob/master/browser-extension/mv3/README.md
+[browser-extension/mv3/README.md](../browser-extension/mv3/README.md)
 
 ### Build WebApp
 
@@ -35,7 +35,7 @@ By default, the local application communicates to our dev Firebase server.
 
 `npm run start` builds the shared package before starting Vite. Use `npm run start:watch` only when you are also editing `shared` and need its watch process.
 
-The browser extension to be used should be built using local environment configuration. Follow [guide](/browser-extension/mv3/README.md).
+The browser extension to be used should be built using local environment configuration. Follow the [local MV3 guide](../browser-extension/mv3/README.md).
 
 ### Local-only rule authoring
 
